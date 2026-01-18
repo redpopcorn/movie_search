@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Search from "./components/Search.jsx";
 import Spinner from "./components/Spinner.jsx";
 import MovieCard from "./components/MovieCard.jsx";
-import { updateTrending, getTrending } from "./utils/trending";
+import { updateTrending, getTrending } from "./utils/Trending.jsx";
 
 const API_KEY = import.meta.env.VITE_OMDB_API_KEY;
 const API_BASE_URL = "https://www.omdbapi.com/";
