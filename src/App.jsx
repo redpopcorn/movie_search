@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import Search from "./components/Search.jsx";
+import Search from "./components/search.jsx";
 import Spinner from "./components/Spinner.jsx";
-import MovieCard from "./components/MovieCard.jsx";
+import MovieCard from "./components/Moviecard.jsx";
 import MovieModal from "./components/MovieModal.jsx";
 import { updateTrending, getTrending } from "./utils/Trending.jsx";
 
