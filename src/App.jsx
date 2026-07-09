@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Search from "./components/Search.jsx";
 import Spinner from "./components/Spinner.jsx";
 import MovieCard from "./components/MovieCard.jsx";
+import MovieModal from "./components/MovieModal.jsx";
 import { updateTrending, getTrending } from "./utils/Trending.jsx";
 
 const API_KEY = import.meta.env.VITE_OMDB_API_KEY;
@@ -13,6 +14,7 @@ const App = () => {
   const [movieList, setMovieList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [trending, setTrending] = useState([]);
+  const [selectedMovieId, setSelectedMovieId] = useState(null);
 
   const fetchMovies = async (title = "avengers") => {
     setIsLoading(true);
@@ -109,12 +111,23 @@ const App = () => {
           ) : (
             <ul className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {movieList.map((movie) => (
-                <MovieCard key={movie.imdbID} movie={movie} />
+                <MovieCard
+                  key={movie.imdbID}
+                  movie={movie}
+                  onClick={() => setSelectedMovieId(movie.imdbID)}
+                />
               ))}
             </ul>
           )}
         </section>
       </div>
+
+      {selectedMovieId && (
+        <MovieModal
+          imdbID={selectedMovieId}
+          onClose={() => setSelectedMovieId(null)}
+        />
+      )}
     </main>
   );
 };

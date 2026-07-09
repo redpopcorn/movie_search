@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1783569072474-0xtmmgkmu",
+    "imdbID": "tt0848228",
+    "movieTitle": "The Avengers",
+    "reviewerName": "jason momoa  i didnt like the movie at all",
+    "rating": 5,
+    "reviewText": "mid as hell",
+    "createdAt": "2026-07-09T03:51:12.474Z"
+  },
+  {
+    "id": "1783569121427-8lwuyee0p",
+    "imdbID": "tt0848228",
+    "movieTitle": "The Avengers",
+    "reviewerName": "marry",
+    "rating": 5,
+    "reviewText": "docks are cool",
+    "createdAt": "2026-07-09T03:52:01.427Z"
+  },
+  {
+    "id": "1783569713033-3kq06n1gx",
+    "imdbID": "tt0069634",
+    "movieTitle": "Some Mothers Do 'Ave 'Em",
+    "reviewerName": "arush",
+    "rating": 5,
+    "reviewText": "didnt like movie",
+    "createdAt": "2026-07-09T04:01:53.033Z"
+  },
+  {
+    "id": "1783570105631-6ybeb7ljb",
+    "imdbID": "tt1229238",
+    "movieTitle": "Mission: Impossible - Ghost Protocol",
+    "reviewerName": "Arush Gupta",
+    "rating": 4,
+    "reviewText": "love the movie excellent",
+    "createdAt": "2026-07-09T04:08:25.631Z"
+  },
+  {
+    "id": "1783570144162-eihk73gbg",
+    "imdbID": "tt2381249",
+    "movieTitle": "Mission: Impossible - Rogue Nation",
+    "reviewerName": "jason mimoa",
+    "rating": 5,
+    "reviewText": "craxy",
+    "createdAt": "2026-07-09T04:09:04.163Z"
+  }
+]
