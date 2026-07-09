@@ -65,18 +65,21 @@ const MovieModal = ({ imdbID, onClose }) => {
       }
     };
 
-    const fetchReviews = async () => {
+    const fetchReviews = () => {
       setIsLoadingReviews(true);
       try {
-        const res = await fetch(`/api/reviews/${imdbID}`);
-        if (res.ok) {
-          const data = await res.json();
-          setReviews(data);
-          // Check if this device has already reviewed this movie
-          const devId = getDeviceId();
-          const alreadyReviewed = data.some((r) => r.deviceId === devId);
-          setHasReviewed(alreadyReviewed);
-        }
+        const allReviewsRaw = localStorage.getItem("movie_reviews");
+        const allReviews = JSON.parse(allReviewsRaw || "[]");
+        const movieReviews = allReviews.filter((r) => r.imdbID === imdbID);
+        // Sort by newest first
+        movieReviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        setReviews(movieReviews);
+
+        // Check if this device has already reviewed this movie
+        const devId = getDeviceId();
+        const alreadyReviewed = movieReviews.some((r) => r.deviceId === devId);
+        setHasReviewed(alreadyReviewed);
       } catch (err) {
         console.error("Failed to fetch reviews:", err);
       } finally {
@@ -89,7 +92,7 @@ const MovieModal = ({ imdbID, onClose }) => {
   }, [imdbID]);
 
   // Handle Review Submission
-  const handleSubmitReview = async (e) => {
+  const handleSubmitReview = (e) => {
     e.preventDefault();
     setErrorMsg("");
     setSuccessMsg("");
@@ -101,24 +104,37 @@ const MovieModal = ({ imdbID, onClose }) => {
 
     setIsSubmitting(true);
 
-    try {
-      const response = await fetch("/api/reviews", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+    // Simulate submission delay for smooth UI feedback
+    setTimeout(() => {
+      try {
+        const devId = getDeviceId();
+        const allReviewsRaw = localStorage.getItem("movie_reviews");
+        const allReviews = JSON.parse(allReviewsRaw || "[]");
+
+        // Double check duplicate submission
+        const alreadyReviewed = allReviews.some(
+          (r) => r.imdbID === imdbID && r.deviceId === devId
+        );
+        if (alreadyReviewed) {
+          setErrorMsg("You have already submitted a review for this movie from this device.");
+          setIsSubmitting(false);
+          return;
+        }
+
+        const newReview = {
+          id: `rev-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           imdbID,
           movieTitle: movieDetails?.Title || "Unknown Movie",
-          reviewerName,
-          rating,
-          reviewText,
-          deviceId: getDeviceId(),
-        }),
-      });
+          reviewerName: reviewerName.trim(),
+          rating: Number(rating),
+          reviewText: reviewText.trim(),
+          deviceId: devId,
+          createdAt: new Date().toISOString(),
+        };
 
-      if (response.ok) {
-        const newReview = await response.json();
+        allReviews.push(newReview);
+        localStorage.setItem("movie_reviews", JSON.stringify(allReviews));
+
         setReviews((prevReviews) => [newReview, ...prevReviews]);
         setReviewerName("");
         setRating(5);
@@ -126,15 +142,12 @@ const MovieModal = ({ imdbID, onClose }) => {
         setHasReviewed(true);
         setSuccessMsg("Review posted successfully! Thank you.");
         setTimeout(() => setSuccessMsg(""), 3000);
-      } else {
-        const errData = await response.json();
-        setErrorMsg(errData.error || "Failed to post review. Please try again.");
+      } catch (err) {
+        setErrorMsg("Failed to save review. Please try again.");
+      } finally {
+        setIsSubmitting(false);
       }
-    } catch (err) {
-      setErrorMsg("Connection error. Could not post review.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    }, 500);
   };
 
   const handleBackdropClick = (e) => {
