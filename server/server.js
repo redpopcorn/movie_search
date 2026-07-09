@@ -95,6 +95,23 @@ app.post("/api/reviews", (req, res) => {
   res.status(201).json(newReview);
 });
 
+// Serve static files from the React frontend build
+const DIST_PATH = path.join(__dirname, "..", "dist");
+app.use(express.static(DIST_PATH));
+
+// Fallback to index.html for SPA support
+app.get("*", (req, res) => {
+  if (req.path.startsWith("/api")) {
+    return res.status(404).json({ error: "API route not found" });
+  }
+  const indexPath = path.join(DIST_PATH, "index.html");
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).send("Frontend build not found. Run 'npm run build' to compile.");
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Backend server is running on http://localhost:${PORT}`);
