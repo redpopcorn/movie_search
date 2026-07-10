@@ -100,7 +100,7 @@ const DIST_PATH = path.join(__dirname, "..", "dist");
 app.use(express.static(DIST_PATH));
 
 // Fallback to index.html for SPA support
-app.get("(.*)", (req, res) => {
+app.get("*splat", (req, res) => {
   if (req.path.startsWith("/api")) {
     return res.status(404).json({ error: "API route not found" });
   }
